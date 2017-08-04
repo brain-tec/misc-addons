@@ -1,3 +1,8 @@
+`1.1.2`
+-------
+
+- **FIX:** Error on saving multiple URLs at once
+
 `1.1.1`
 -------
 

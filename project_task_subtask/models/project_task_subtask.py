@@ -51,6 +51,7 @@ class ProjectTaskSubtask(models.Model):
 
     @api.multi
     def write(self, vals):
+        old_names = dict(zip(self.mapped('id'), self.mapped('name')))
         result = super(ProjectTaskSubtask, self).write(vals)
         for r in self:
             if vals.get('state'):
@@ -58,7 +59,7 @@ class ProjectTaskSubtask(models.Model):
                 if self.env.user != r.reviewer_id and self.env.user != r.user_id:
                     raise UserError(_('Only users related to that subtask can change state.'))
             if vals.get('name'):
-                r.task_id.send_subtask_email(r.name, r.state, r.reviewer_id.id, r.user_id.id)
+                r.task_id.send_subtask_email(r.name, r.state, r.reviewer_id.id, r.user_id.id, old_name=old_names[r.id])
                 if self.env.user != r.reviewer_id:
                     raise UserError(_('Only reviewer can change description.'))
             if vals.get('user_id'):
@@ -130,15 +131,17 @@ class Task(models.Model):
                     tmp_string3 = escape(u': {0}'.format(tmp_subtask_name))
                     result_string3 += u'<li><b>TODO</b>{}</li>'.format(tmp_string3)
                 elif subtask.state == 'todo' and record.env.user == subtask.user_id:
-                    tmp_string1 = escape(u'{0}: {1}'.format(subtask.reviewer_id.name, tmp_subtask_name))
-                    result_string1 += u'<li><b>TODO</b> from {}</li>'.format(tmp_string1)
+                    tmp_string1_1 = escape(u'{0}'.format(subtask.reviewer_id.name))
+                    tmp_string1_2 = escape(u'{0}'.format(tmp_subtask_name))
+                    result_string1 += u'<li><b>TODO</b> from <em>{0}</em>: {1}</li>'.format(tmp_string1_1, tmp_string1_2)
                 elif subtask.state == 'todo' and record.env.user == subtask.reviewer_id:
-                    tmp_string2 = escape(u'{0}: {1}'.format(subtask.user_id.name, tmp_subtask_name))
-                    result_string2 += u'<li>TODO for {}</li>'.format(tmp_string2)
+                    tmp_string2_1 = escape(u'{0}'.format(subtask.user_id.name))
+                    tmp_string2_2 = escape(u'{0}'.format(tmp_subtask_name))
+                    result_string2 += u'<li>TODO for <em>{0}</em>: {1}</li>'.format(tmp_string2_1, tmp_string2_2)
             record.kanban_subtasks = '<ul>' + result_string1 + result_string3 + result_string2 + '</ul>'
 
     @api.multi
-    def send_subtask_email(self, subtask_name, subtask_state, subtask_reviewer_id, subtask_user_id):
+    def send_subtask_email(self, subtask_name, subtask_state, subtask_reviewer_id, subtask_user_id, old_name=None):
         for r in self:
             body = ''
             reviewer = self.env["res.users"].browse(subtask_reviewer_id)
@@ -151,18 +154,22 @@ class Task(models.Model):
             if subtask_state == 'cancelled':
                 state = '<span style="color:#777">' + state + '</span>'
             if subtask_state == 'waiting':
-                state = '<span style="color:#967117">' + state + '</span>'
+                state = '<span style="color:#b818ce">' + state + '</span>'
             partner_ids = []
             subtype = 'project_task_subtask.subtasks_subtype'
             if user == self.env.user and reviewer == self.env.user:
-                body = '<p><strong>' + state + '</strong>: ' + escape(subtask_name) + '</p>'
+                body = '<p>' + '<strong>' + state + '</strong>: ' + escape(subtask_name)
                 subtype = False
             elif self.env.user == reviewer:
-                body = '<p>' + escape(user.name) + ', <br><strong>' + state + '</strong>: ' + escape(subtask_name) + '</p>'
+                body = '<p>' + escape(user.name) + ', <br><strong>' + state + '</strong>: ' + escape(subtask_name)
                 partner_ids = [user.partner_id.id]
             elif self.env.user == user:
-                body = '<p>' + escape(reviewer.name) + ', <br><strong>' + state + '</strong>: ' + escape(subtask_name) + '</p>'
+                body = '<p>' + escape(reviewer.name) + ', <em style="color:#999">I updated checklist item assigned to me:</em> <br><strong>' + state + '</strong>: ' + escape(subtask_name)
                 partner_ids = [reviewer.partner_id.id]
+            if old_name:
+                body = body + '<br><em>Updated from</em><br><strong>' + state + '</strong>: ' + escape(old_name) + '</p>'
+            else:
+                body = body + '</p>'
             r.message_post(type='comment',
                            subtype=subtype,
                            body=body,

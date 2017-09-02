@@ -60,8 +60,8 @@ class ProjectTaskSubtask(models.Model):
                     raise UserError(_('Only users related to that subtask can change state.'))
             if vals.get('name'):
                 r.task_id.send_subtask_email(r.name, r.state, r.reviewer_id.id, r.user_id.id, old_name=old_names[r.id])
-                if self.env.user != r.reviewer_id:
-                    raise UserError(_('Only reviewer can change description.'))
+                if self.env.user != r.reviewer_id and self.env.user != r.user_id:
+                    raise UserError(_('Only users related to that subtask can change state.'))
             if vals.get('user_id'):
                 r.task_id.send_subtask_email(r.name, r.state, r.reviewer_id.id, r.user_id.id)
         return result
@@ -166,6 +166,9 @@ class Task(models.Model):
             elif self.env.user == user:
                 body = '<p>' + escape(reviewer.name) + ', <em style="color:#999">I updated checklist item assigned to me:</em> <br><strong>' + state + '</strong>: ' + escape(subtask_name)
                 partner_ids = [reviewer.partner_id.id]
+            else:
+                body = '<p>' + escape(user.name) + ', ' + escape(reviewer.name) + ', <em style="color:#999">I updated checklist item, now its assigned to ' + escape(user.name) + ': </em> <br><strong>' + state + '</strong>: ' + escape(subtask_name)
+                partner_ids = [user.partner_id.id, reviewer.partner_id.id]
             if old_name:
                 body = body + '<br><em style="color:#999">Updated from</em><br><strong>' + state + '</strong>: ' + escape(old_name) + '</p>'
             else:

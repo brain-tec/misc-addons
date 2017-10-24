@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import base64
 from odoo import models, api
 import psycopg2
 
@@ -35,14 +36,14 @@ class IrAttachment(models.Model):
             return super(IrAttachment, self)._file_write(value, checksum)
 
         lobj = self.lobject(self.env.cr, 0, 'wb')  # oid=0 means creation
-        lobj.write(value.decode('base64'))
+        lobj.write(base64.b64decode(value))
         oid = lobj.oid
         return str(oid)
 
     def _file_delete(self, fname):
         filestore = False
         try:
-            oid = long(fname)
+            oid = int(fname)
         except:
             filestore = True
 
@@ -62,7 +63,7 @@ class IrAttachment(models.Model):
         lobj = self.lobject(self.env.cr, int(fname), 'rb')
         if bin_size:
             return lobj.seek(0, 2)
-        return lobj.read().encode('base64')  # GR TODO it must be possible to read-encode in chunks
+        return base64.b64encode(lobj.read()) # GR TODO it must be possible to read-encode in chunks
 
     @api.depends('store_fname', 'db_datas')
     def _compute_datas(self):

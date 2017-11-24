@@ -66,7 +66,7 @@ All system parameters created before module installation (as well as just create
   * **param2** = *value2* (default value)
   * **param3** = *value3* (default value)
 
-* Then for companyA we have
+* Then for companyB we have
 
   * **param1** = *value1* (via default value)
   * **param2** = *value22* (value for companyB)
@@ -91,12 +91,18 @@ Uninstallation
 * Make Export of all records (``[Action] -> Export``) -- exporting only column ``value`` is enough
 * Click ``[Import]`` button
 * Upload ``*.csv`` file
-* Click ``[Validate]`` -- it must not return errors!
+* Click ``[Validate]`` -- it may take some time. It must not return errors!
 * Don't close current page!
 * At other page:
 
   * uninstall module
-  * Upgrade ``base`` module
+
+    * It will update base module automatically which leads to **upgrading all modules**:
+
+      * It may override some changes which were ade manually (e.g. views, pages)
+      * It may lead to errors in third-parties modules in some cases
+
+    * When uninstallation is finished it will show *Internal Server Error*. Keep calm and carry on next step.
 
 * Return back to page with importing
 * Click ``[Import]``

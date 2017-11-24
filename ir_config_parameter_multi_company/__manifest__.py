@@ -16,6 +16,7 @@
     "currency": "EUR",
 
     "depends": [
+        "base_setup",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -31,5 +32,5 @@
     "uninstall_hook": 'uninstall_hook',
 
     "auto_install": False,
-    "installable": False,
+    "installable": True,
 }

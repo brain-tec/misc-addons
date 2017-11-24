@@ -13,15 +13,44 @@ class IrConfigParameter(models.Model):
 
     value = fields.Text(company_dependent=True)
 
+    @api.multi
+    def _get_property(self, for_default=False):
+        self.ensure_one()
+
+        domain = self.env['ir.property']._get_domain('value', self._name)
+        domain += [('res_id', '=', '%s,%s' % (self._name, self.id))]
+        if for_default:
+            # find: ('company_id', 'in', [company_id, False])
+            # update to: ('company_id', 'in', [False])
+            domain = [
+                ('company_id', 'in', [False])
+                if x[0] == 'company_id'
+                else
+                x
+                for x in domain
+            ]
+
+        prop = self.env['ir.property'].search(domain)
+        return prop
+
     @api.model
     def create(self, vals):
         res = super(IrConfigParameter, self).create(vals)
         # make value company independent
-        domain = self.env['ir.property']._get_domain('value', self._name)
-        domain += [('res_id', '=', '%s,%s' % (self._name, res.id))]
-        prop = self.env['ir.property'].search(domain)
+        prop = res._get_property()
         prop.company_id = None
         prop.name = PROP_NAME % res.key
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(IrConfigParameter, self).write(vals)
+        if 'key' in vals:
+            # Change property name after renaming the parameter to avoid confusions
+            self.ensure_one()  # it's not possible to update key on multiple records
+            name = PROP_NAME % vals.get('key')
+            prop = self._get_property(for_default=True)
+            prop.name = name
         return res
 
     @api.model
@@ -66,12 +95,15 @@ class IrConfigParameter(models.Model):
             _logger.info('Starting conversion for ir.config_parameter: saving data for further processing.')
             # Rename image column so we don't lose images upon module install
             cr.execute("ALTER TABLE ir_config_parameter RENAME COLUMN value TO value_old")
+
+            def call_init():
+                self._init_from_value_old()
+            self.pool.post_init(call_init)
         else:
             _logger.debug('No value field found in ir_config_parameter; no data to save.')
         return super(IrConfigParameter, self)._auto_init()
 
-    def _auto_end(self):
-        super(IrConfigParameter, self)._auto_end()
+    def _init_from_value_old(self):
         cr = self.env.cr
         # Only proceed if we have the appropriate _old field
         cr.execute("select COUNT(*) from information_schema.columns where table_name='ir_config_parameter' AND column_name='value_old';")

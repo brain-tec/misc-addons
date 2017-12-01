@@ -7,7 +7,7 @@
     'category': 'Debranding',
     'images': ['images/web_debranding.png'],
     'website': 'https://twitter.com/yelizariev',
-    'price': 150.00,
+    'price': 250.00,
     'currency': 'EUR',
     'depends': [
         'web',
@@ -15,7 +15,6 @@
         'web_planner',
         'access_apps',
         'access_settings_menu',
-        'mail_base',
     ],
     'data': [
         'security/web_debranding_security.xml',
@@ -30,5 +29,5 @@
     ],
     'auto_install': False,
     'uninstall_hook': 'uninstall_hook',
-    'installable': False
+    'installable': True
 }

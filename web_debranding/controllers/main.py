@@ -9,7 +9,7 @@ from odoo.http import request
 from odoo.modules import get_module_resource
 import io
 
-from ..models.ir_translation import debrand_bytes
+from ..models.ir_translation import debrand, debrand_bytes
 
 db_monodb = http.db_monodb
 
@@ -86,6 +86,6 @@ class WebClientCustom(WebClient):
 
         for module_key, module_vals in res['modules'].items():
             for message in module_vals['messages']:
-                message['id'] = request.env['ir.translation']._debrand(message['id'])
-                message['string'] = request.env['ir.translation']._debrand(message['string'])
+                message['id'] = debrand(request.env, message['id'])
+                message['string'] = debrand(request.env, message['string'])
         return res

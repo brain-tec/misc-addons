@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 from . import models
 from . import controllers
-from . import fields
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 
 MODULE = '_web_debranding'
 
 
 def uninstall_hook(cr, registry):
-    registry['ir.model.data']._module_data_uninstall(cr, SUPERUSER_ID, [MODULE])
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['ir.model.data']._module_data_uninstall([MODULE])
+
+
+def post_load():
+
+    from . import fields

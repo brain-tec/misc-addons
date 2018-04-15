@@ -4,7 +4,7 @@
     "summary": """Ported view from odoo 8""",
     "category": "Hidden",
     "images": [],
-    "version": "1.0.0",
+    "version": "1.0.1",
 
     "author": "IT-Projects LLC, Pavel Romanchenko",
     "website": "https://it-projects.info",
@@ -27,7 +27,7 @@
     "post_load": None,
     "pre_init_hook": None,
     "post_init_hook": None,
-    "installable": True,
+    "installable": False,
     "auto_install": False,
     "application": False,
 }

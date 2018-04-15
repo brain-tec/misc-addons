@@ -1,9 +1,56 @@
 # -*- coding: utf-8 -*-
 import re
 
-from openerp import api
-from openerp import models
-from openerp import tools
+from odoo import api
+from odoo import models
+from odoo import tools
+
+from .ir_config_parameter import get_debranding_parameters_env
+
+
+def debrand_documentation_links(source, new_documentation_website):
+    return re.sub(r'https://www.odoo.com/documentation/',
+                  new_documentation_website + 'documentation/',
+                  source, flags=re.IGNORECASE)
+
+
+def debrand_links(source, new_website):
+    return re.sub(r'\bodoo.com\b', new_website, source, flags=re.IGNORECASE)
+
+
+def debrand(env, source, is_code=False):
+    if not source or not re.search(r'\bodoo\b', source, re.IGNORECASE):
+        return source
+
+    params = get_debranding_parameters_env(env)
+    new_name = params.get('web_debranding.new_name')
+    new_website = params.get('web_debranding.new_website')
+    new_documentation_website = params.get('web_debranding.new_documentation_website')
+
+    source = debrand_documentation_links(source, new_documentation_website)
+    source = debrand_links(source, new_website)
+    # We must exclude the next cases, which occur only in a code,
+    # Since JS functions are also contained in the localization files.
+    # Next regular expression exclude from substitution 'odoo.SMTH', 'odoo =', 'odoo=', 'odooSMTH', 'odoo['
+    # Where SMTH is an any symbol or number or '_'. Option odoo.com were excluded previously.
+    # Examples:
+    # odoo.
+    # xml file: https://github.com/odoo/odoo/blob/9.0/addons/im_livechat/views/im_livechat_channel_templates.xml#L148
+    # odooSMTH
+    # https://github.com/odoo/odoo/blob/11.0/addons/website_google_map/views/google_map_templates.xml#L14
+    # odoo =
+    # https://github.com/odoo/odoo/blob/11.0/addons/web/views/webclient_templates.xml#L260
+    # odoo[
+    # https://github.com/odoo/odoo/blob/11.0/addons/web_editor/views/iframe.xml#L43-L44
+    # SMTH.odoo
+    # https://github.com/odoo/odoo/blob/11.0/addons/web_editor/views/iframe.xml#L43
+    source = re.sub(r'\b(?<!\.)odoo(?!\.\S|\s?=|\w|\[)\b', new_name, source, flags=re.IGNORECASE)
+
+    return source
+
+
+def debrand_bytes(env, source):
+    return bytes(debrand(env, source.decode('utf-8')), 'utf-8')
 
 
 class IrTranslation(models.Model):
@@ -17,21 +64,7 @@ class IrTranslation(models.Model):
 
     @api.model
     def _debrand(self, source):
-        if not source or not re.search(r'\bodoo\b', source, re.IGNORECASE):
-            return source
-
-        params = self.env['ir.config_parameter'].get_debranding_parameters()
-        new_name = params.get('web_debranding.new_name')
-        new_website = params.get('web_debranding.new_website')
-
-        # We must exclude the case when after the word "odoo" is the word "define".
-        # Since JS functions are also contained in the localization files.
-        # Example:
-        # po file: https://github.com/odoo/odoo/blob/9.0/addons/im_livechat/i18n/ru.po#L853
-        # xml file: https://github.com/odoo/odoo/blob/9.0/addons/im_livechat/views/im_livechat_channel_templates.xml#L148
-        source = re.sub(r'\bodoo.com\b', new_website, source, flags=re.IGNORECASE)
-        source = re.sub(r'\bodoo(?!\.define)\b', new_name, source, flags=re.IGNORECASE)
-        return source
+        return debrand(self.env, source)
 
     @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
     def __get_source(self, name, types, lang, source, res_id):

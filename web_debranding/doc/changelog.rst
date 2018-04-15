@@ -1,7 +1,61 @@
-.. _changelog:
+`1.0.24`
+--------
 
-Updates
-=======
+- FIX: Save\Create button didn't react in ``Point of Sale`` records
+
+`1.0.23`
+--------
+
+- FIX: Debranding problems after introducing new features
+
+`1.0.22`
+--------
+
+- FIX: method create didn't work via xmlrpc (e.g. on using Mail Composer)
+
+`1.0.21`
+--------
+
+- FIX: In some cases, default parameters were used instead of custom ones
+
+`1.0.20`
+--------
+
+- FIX: Hiding a custom logo
+- FIX: Error when creating second empty database
+- FIX: Remove official videos in planner
+- FIX: Replace "Odoo" in 'install aplication' mails
+- FIX: Remove Enterprise radio-buttons in Settings
+
+`1.0.19`
+--------
+
+- FIX: Page title was empty even when it doesn't contain references to odoo
+
+`1.0.18`
+--------
+
+- FIX: Replace icons for android and apple devices with custom url
+
+`1.0.17`
+--------
+
+- FIX: Do not reset config values to default ones after upgrade or reinstall the module
+
+`1.0.16`
+--------
+
+- FIX: Removed odoo.com link from left bottom of the page
+
+`1.0.15`
+--------
+
+- FIX: Updating Title didn't work on *Optimize SEO* website tool
+
+`1.0.14`
+--------
+
+- FIX: Compatibility with Timesheet Grid View module
 
 `1.0.13`
 --------
@@ -75,8 +129,6 @@ Updates
 
 - FIX: updates for recent odoo 9.0
 - REF: compatible with other Dashboard modules
-
-=======
 
 `1.0.0`
 -------

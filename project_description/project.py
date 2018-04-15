@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#################################################################################
+#
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2011 Julius Network Solutions SARL <contact@julius.fr>
@@ -17,27 +17,27 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#################################################################################
+#
 
-from openerp.osv import fields, orm
+from openerp import fields, models
 
 
-class ProjectProject(orm.Model):
+class ProjectProject(models.Model):
     _inherit = "project.project"
-    _columns = {
+
         # restricted field. Allowed group members only.
-        'description': fields.text('description', groups="project_description.group_access_to_project_description"),
-    }
+    description = fields.Text('description', groups="project_description.group_access_to_project_description")
 
 
-class AccountAnalyticAccount(orm.Model):
+
+class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
         if not ids:
             return res
-        if isinstance(ids, (int, long)):
+        if isinstance(ids, int):
             ids = [ids]
         for id in ids:
             elmt = self.browse(cr, uid, id, context=context)

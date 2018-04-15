@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+#
 #
 #    Project Tags
 #    Copyright (C) 2013 Sistemas ADHOC
@@ -18,22 +18,22 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+#
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
-class ProjectTag(osv.osv):
+class ProjectTag(models.Model):
     """"""
 
     _name = 'project_tags.project_tag'
     _description = 'project_tag'
 
-    _columns = {
-        'name': fields.char(string='Name', required=True, size=64),
-        'project_id': fields.many2many('project.project', 'project_tags___project_tag_ids_rel', 'project_tag_id', 'project_id', string='&lt;no label&gt;'),
-    }
+
+    name = fields.Char(string='Name', required=True, size=64)
+    project_id = fields.Many2many('project.project', 'project_tags___project_tag_ids_rel', 'project_tag_id', 'project_id', string='&lt;no label&gt;')
+
 
     _defaults = {
     }

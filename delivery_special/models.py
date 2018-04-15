@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv, fields
+from openerp import models, fields
 from openerp.tools.translate import _
+from openerp.tools import safe_eval
 
-class DeliveryGrid(osv.osv):
+
+class DeliveryGrid(models.Model):
     _inherit = "delivery.grid"
 
     def get_price(self, cr, uid, id, order, dt, context=None):
@@ -30,7 +32,7 @@ class DeliveryGrid(osv.osv):
         ok = False
         price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity, 'special_delivery': special_delivery}
         for line in grid.line_ids:
-            test = eval(line.type + line.operator + str(line.max_value), price_dict)
+            test = safe_eval(line.type + line.operator + str(line.max_value), price_dict)
             if test:
                 if line.price_type == 'variable':
                     price = line.list_price * price_dict[line.variable_factor]
@@ -39,25 +41,25 @@ class DeliveryGrid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise osv.except_osv(_("Unable to fetch delivery method!"), _("Selected product in the delivery method doesn't fulfill any of the delivery grid(s) criteria."))
+            raise UserError(_("Unable to fetch delivery method!"), _("Selected product in the delivery method doesn't fulfill any of the delivery grid(s) criteria."))
 
         return price
 
 
-class DeliveryGridLine(osv.osv):
+class DeliveryGridLine(models.Model):
     _inherit = "delivery.grid.line"
-    _columns = {
-        'type': fields.selection([('weight', 'Weight'), ('volume', 'Volume'),
+
+    type = fields.Selection([('weight', 'Weight'), ('volume', 'Volume')
                                   ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity'), ('special_delivery', 'Special Delivery')],
                                  'Variable', required=True),
-    }
 
 
-class ProductTemplate(osv.osv):
+
+class ProductTemplate(models.Model):
     _inherit = 'product.template'
-    _columns = {
-        'special_delivery': fields.integer('Special Delivery', help='Allows make special rules at delivery grid. Can be negative')
-    }
+
+    special_delivery = fields.Integer('Special Delivery', help='Allows make special rules at delivery grid. Can be negative')
+
     _defaults = {
         'special_delivery': 0,
     }

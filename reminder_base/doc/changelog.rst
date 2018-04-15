@@ -1,7 +1,14 @@
-.. _changelog:
+`1.0.7`
+-------
+- Fix: compatibility with the "Mass Editing" module
 
-Updates
-=======
+`1.0.6`
+-------
+- Fix: some migration fixes for correct work in v10.0
+
+`1.0.5`
+-------
+- PORT: support for 10.0
 
 `1.0.4`
 -------

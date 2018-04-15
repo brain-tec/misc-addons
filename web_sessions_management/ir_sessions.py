@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
+#
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
@@ -20,7 +20,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+#
 
 import logging
 from openerp import api, models, fields
@@ -115,6 +115,6 @@ class IrSessions(models.Model):
     @api.multi
     def _on_session_logout(self, logout_type=None):
         self.write({'logged_in': False,
-                    'date_logout': fields.datetime.now(),
+                date_logout = fields.Datetime.now()
                     'logout_type': logout_type,
                     })

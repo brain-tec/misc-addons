@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
+#
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
@@ -20,10 +20,10 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+#
 
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp import fields
+from openerp import models
 from datetime import datetime
 from openerp import SUPERUSER_ID
 from openerp.http import request
@@ -31,22 +31,22 @@ from openerp.addons.base.ir.ir_cron import _intervalTypes
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
-class ResUsers(osv.osv):
+class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    _columns = {
-        'login_calendar_id': fields.many2one('resource.calendar',
+
+    login_calendar_id = fields.Many2one('resource.calendar'
                                              'Allowed Login Calendar', company_dependent=True,
                                              help='The user will be only allowed to login in the calendar defined here.'),
-        'no_multiple_sessions': fields.boolean('No Multiple Sessions', company_dependent=True,
+    no_multiple_sessions = fields.Boolean('No Multiple Sessions', company_dependent=True,
                                                help='Select this to prevent user to start a session more than once'),
-        'interval_number': fields.integer('Session Timeout', company_dependent=True, help='Timeout since last activity for auto logout'),
-        'interval_type': fields.selection([('minutes', 'Minutes'),
+    interval_number = fields.Integer('Session Timeout', company_dependent=True, help='Timeout since last activity for auto logout')
+    interval_type = fields.Selection([('minutes', 'Minutes')
                                            ('hours', 'Hours'), ('work_days', 'Work Days'),
                                            ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')],
                                           'Interval Unit', company_dependent=True),
-        'session_ids': fields.one2many('ir.sessions', 'user_id', 'User Sessions')
-    }
+    session_ids = fields.One2many('ir.sessions', 'user_id', 'User Sessions')
+
 
     # get earlier expiring date
     def get_expiring_date(self, cr, uid, id, context):

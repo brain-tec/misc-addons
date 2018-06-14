@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 {
     "name": "Attachment Url",
     "summary": """Use attachment URL and upload data to external storage""",
     "category": "Tools",
     "images": [],
-    "version": "1.1.2",
+    "version": "1.1.3",
     "application": False,
 
     "author": "IT-Projects LLC, Ildar Nasyrov",

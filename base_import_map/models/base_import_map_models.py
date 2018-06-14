@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
 
@@ -20,7 +19,7 @@ class Import(models.TransientModel):
 
     @api.multi
     def do(self, fields, options, dryrun=False):
-        res = super(Import, self).do(fields, options, dryrun=False)
+        res = super(Import, self).do(fields, options, dryrun=dryrun)
         if not dryrun and options['save_settings']:
             model_id = self.env["ir.model"].search([("model", "=", str(self.res_model))]).id
             new_settings = self.env["base_import_map.map"].create({
@@ -68,7 +67,7 @@ class SettingImport(models.Model):
     file_read_hook = fields.Text(string="File read hook", help="""
 Update values of the file. Use variable ``row`` to update values in a row.""")
     model_id = fields.Many2one("ir.model", string="Models")
-    model = fields.Char(related="model_id.model")
+    model = fields.Char(related="model_id.model", store=True)
     line_ids = fields.One2many("base_import_map.line", "setting_id", string="Settings line")
 
 

@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import re
 
 from odoo import api
 from odoo import models
 from odoo import tools
 
-from .ir_config_parameter import PARAMS
+from .ir_config_parameter import get_debranding_parameters_env
 
 
 def debrand_documentation_links(source, new_documentation_website):
@@ -14,34 +13,38 @@ def debrand_documentation_links(source, new_documentation_website):
                   source, flags=re.IGNORECASE)
 
 
+def debrand_links(source, new_website):
+    return re.sub(r'\bodoo.com\b', new_website, source, flags=re.IGNORECASE)
+
+
 def debrand(env, source, is_code=False):
     if not source or not re.search(r'\bodoo\b', source, re.IGNORECASE):
         return source
 
-    # get_debranding_parameters may not be available yet on database creation
-    if env and hasattr(env['ir.config_parameter'], 'get_debranding_parameters'):
-        params = env['ir.config_parameter'].get_debranding_parameters()
-    else:
-        # use default values
-        params = dict(PARAMS)
-
+    params = get_debranding_parameters_env(env)
     new_name = params.get('web_debranding.new_name')
     new_website = params.get('web_debranding.new_website')
     new_documentation_website = params.get('web_debranding.new_documentation_website')
 
     source = debrand_documentation_links(source, new_documentation_website)
-    source = re.sub(r'\bodoo.com\b', new_website, source, flags=re.IGNORECASE)
-
-    if is_code:
-        # stop replacing here, because replacing variable odoo is a bad idea
-        return source
-
-    # We must exclude the case when after the word "odoo" is the word "define".
+    source = debrand_links(source, new_website)
+    # We must exclude the next cases, which occur only in a code,
     # Since JS functions are also contained in the localization files.
-    # Example:
-    # po file: https://github.com/odoo/odoo/blob/9.0/addons/im_livechat/i18n/ru.po#L853
+    # Next regular expression exclude from substitution 'odoo.SMTH', 'odoo =', 'odoo=', 'odooSMTH', 'odoo['
+    # Where SMTH is an any symbol or number or '_'. Option odoo.com were excluded previously.
+    # Examples:
+    # odoo.
     # xml file: https://github.com/odoo/odoo/blob/9.0/addons/im_livechat/views/im_livechat_channel_templates.xml#L148
-    source = re.sub(r'\bodoo(?!\.define)\b', new_name, source, flags=re.IGNORECASE)
+    # odooSMTH
+    # https://github.com/odoo/odoo/blob/11.0/addons/website_google_map/views/google_map_templates.xml#L14
+    # odoo =
+    # https://github.com/odoo/odoo/blob/11.0/addons/web/views/webclient_templates.xml#L260
+    # odoo[
+    # https://github.com/odoo/odoo/blob/11.0/addons/web_editor/views/iframe.xml#L43-L44
+    # SMTH.odoo
+    # https://github.com/odoo/odoo/blob/11.0/addons/web_editor/views/iframe.xml#L43
+    source = re.sub(r'\b(?<!\.)odoo(?!\.\S|\s?=|\w|\[)\b', new_name, source, flags=re.IGNORECASE)
+
     return source
 
 

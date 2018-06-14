@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 {
     "name": """Preview Media Files""",
     "summary": """Open attached images in popup""",
     "category": "Web",
     "images": ['images/screenshot-1.png'],
-    "version": "1.0.0",
+    "version": "11.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
@@ -32,5 +31,5 @@
     "post_init_hook": None,
 
     "auto_install": False,
-    "installable": False,
+    "installable": True,
 }

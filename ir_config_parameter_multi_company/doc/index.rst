@@ -72,7 +72,11 @@ All system parameters created before module installation (as well as just create
   * **param2** = *value22* (value for companyB)
   * **param3** = *value3* (via default value)
   
-  Note: Make sure that the same vaue for all companies (leave the default value)
+  Note: Make sure that the same value for all companies (leave the default value).
+  Follow the steps:
+ * Go to Company properties
+ * Find this value in every Company and delete it.
+ * Change companies value (System Parameters). It must be the same as Default value (you'll find this in Company Properties).
 
 Company Properties
 ------------------

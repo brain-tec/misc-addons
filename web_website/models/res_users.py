@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 from odoo import models, fields, api, _
@@ -58,3 +57,10 @@ class ResUsers(models.Model):
                     and record.backend_website_id.company_id \
                     and record.backend_website_id.company_id != record.company_id:
                 raise ValidationError(_("Current website doesn't belong to Current Company"))
+
+    def __init__(self, pool, cr):
+        # don't save result of super to return after extension due to E0101, return-in-init
+        super(ResUsers, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        type(self).SELF_WRITEABLE_FIELDS.extend(['backend_website_id'])

@@ -87,7 +87,7 @@ msgstr ""
 
 #. module: web_website
 #. openerp-web
-#: code:addons/web_website/static/src/xml/qweb.xml:8
+#: code:addons/web_website/static/src/xml/qweb.xml:15
 #, python-format
 msgid "Dropdown menu"
 msgstr ""

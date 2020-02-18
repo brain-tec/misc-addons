@@ -3,7 +3,7 @@
 # Copyright 2017 Karamov Ilmir <https://it-projects.info/team/ilmir-k>
 # Copyright 2017-2018 iledarn <https://github.com/iledarn>
 # Copyright 2018-2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+# License MIT (https://opensource.org/licenses/MIT).
 {
     "name": """Project Task Checklist""",
     "summary": """Use checklist to be ensure that all your tasks are performed and to make easy control over them""",
@@ -12,7 +12,7 @@
     "version": "11.0.1.1.1",
     "application": False,
     "author": "IT-Projects LLC, Manaev Rafael",
-    "support": "apps@it-projects.info",
+    "support": "apps@itpp.dev",
     "website": "https://it-projects.info",
     "license": "GPL-3",
     "price": 69.00,

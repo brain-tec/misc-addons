@@ -1,6 +1,6 @@
 # Copyright (c) 2004-2015 Odoo S.A.
 # Copyright 2018-2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+# License MIT (https://opensource.org/licenses/MIT).
 
 from odoo import api, fields, models
 
@@ -8,17 +8,7 @@ from odoo import api, fields, models
 class BaseConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    group_attendance_use_pin = fields.Selection(
-        [
-            (
-                0,
-                'Partners do not need to enter their PIN to check in manually in the "Kiosk Mode".',
-            ),
-            (
-                1,
-                'Partners must enter their PIN to check in manually in the "Kiosk Mode".',
-            ),
-        ],
+    group_attendance_use_pin = fields.Boolean(
         string="Partner PIN",
         help="Enable or disable partner PIN identification at check in",
         implied_group="base_attendance.group_hr_attendance_use_pin",

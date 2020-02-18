@@ -1,6 +1,6 @@
 # Copyright (c) 2004-2015 Odoo S.A.
 # Copyright 2018-2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+# License MIT (https://opensource.org/licenses/MIT).
 {
     "name": """Partner Attendances""",
     "summary": """Manage partner attendances""",
@@ -10,9 +10,9 @@
     "version": "13.0.1.1.2",
     "application": False,
     "author": "IT-Projects LLC, Kolushov Alexandr",
-    "support": "apps@it-projects.info",
+    "support": "apps@itpp.dev",
     "website": "https://www.odoo.com/apps/modules/12.0/base_attendance/",
-    "license": "LGPL-3",
+    "license": "Other OSI approved licence",  # MIT
     "price": 30.00,
     "currency": "EUR",
     "depends": ["barcodes"],

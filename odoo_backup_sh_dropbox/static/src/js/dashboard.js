@@ -1,14 +1,10 @@
 // Copyright 2019 Dinar Gabbasov Krotov <https://it-projects.info/team/GabbasovDinar>
-// License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+// License MIT (https://opensource.org/licenses/MIT).
 
 odoo.define("odoo_backup_sh_dropbox.dashboard", function(require) {
     "use strict";
 
     var Dashboard = require("odoo_backup_sh.dashboard");
-    var ajax = require("web.ajax");
-    var core = require("web.core");
-    var Widget = require("web.Widget");
-    var QWeb = core.qweb;
 
     Dashboard.include({
         click_group_buttons: function(e) {

@@ -1,5 +1,5 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+# License MIT (https://opensource.org/licenses/MIT).
 {
     "name": """Google drive backing up""",
     "summary": """The small investment to protect your business""",
@@ -9,9 +9,9 @@
     "version": "13.0.1.0.0",
     "application": False,
     "author": "IT-Projects LLC, Dinar Gabbasov",
-    "support": "apps@it-projects.info",
+    "support": "apps@itpp.dev",
     "website": "https://apps.odoo.com/apps/modules/13.0/odoo_backup_sh_google_disk/",
-    "license": "LGPL-3",
+    "license": "Other OSI approved licence",  # MIT
     "price": 119.00,
     "currency": "EUR",
     "depends": ["odoo_backup_sh"],

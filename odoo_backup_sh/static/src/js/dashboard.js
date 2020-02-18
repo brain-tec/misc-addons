@@ -1,12 +1,12 @@
 // Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 // Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 // Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
-// License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+// License MIT (https://opensource.org/licenses/MIT).
 odoo.define("odoo_backup_sh.dashboard", function(require) {
     "use strict";
 
     // See https://eslint.org/docs/rules/no-undef
-    /* global moment, Chart*/
+    /* global Chart*/
     var AbstractAction = require("web.AbstractAction");
     var ajax = require("web.ajax");
     var core = require("web.core");
@@ -217,7 +217,7 @@ odoo.define("odoo_backup_sh.dashboard", function(require) {
             var chart_id = "odoo_backup_sh-chart-total-usage";
             this.$("#graph_remote_storage_usage").empty();
             var service = this.get_service();
-            var title;
+            var title = null;
             if (service === "total") {
                 title = _t("total remote storage usage");
             } else {
@@ -521,7 +521,6 @@ odoo.define("odoo_backup_sh.dashboard", function(require) {
 
         o_dashboard_action_make_backup: function(ev) {
             ev.preventDefault();
-            var self = this;
             var service = $(ev.currentTarget)
                 .closest("div[data-service]")
                 .data("service");

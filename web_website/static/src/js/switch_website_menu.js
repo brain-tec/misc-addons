@@ -1,5 +1,5 @@
 // Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
-// License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+// License MIT (https://opensource.org/licenses/MIT).
 odoo.define("web_website.SwitchWebsiteMenu", function(require) {
     "use strict";
 
@@ -30,7 +30,6 @@ odoo.define("web_website.SwitchWebsiteMenu", function(require) {
         start: function() {
             var self = this;
             var all_websites_text = _t("All Websites");
-            var topbar = self.$(".oe_topbar_name");
             var current_website = session.user_websites.current_website;
 
             var websites_list = "";

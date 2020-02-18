@@ -6,9 +6,9 @@
     "version": "12.0.1.0.0",
     "application": False,
     "author": "IT-Projects LLC, Ivan Yelizariev, Pavel Romanchenko",
-    "support": "apps@it-projects.info",
+    "support": "apps@itpp.dev",
     "website": "https://twitter.com/yelizariev",
-    "license": "LGPL-3",
+    "license": "Other OSI approved licence",  # MIT
     "price": 21.00,
     "currency": "EUR",
     "depends": ["reminder_base", "project"],
